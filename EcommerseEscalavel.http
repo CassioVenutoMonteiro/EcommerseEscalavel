@@ -1,0 +1,6 @@
+@EcommerseEscalavel_HostAddress = http://localhost:5120
+
+GET {{EcommerseEscalavel_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
