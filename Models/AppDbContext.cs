@@ -17,5 +17,8 @@ namespace EcommerseEscalavel.Models
 
         // Metodos criados para realizar o crud de cada model através do controller
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
