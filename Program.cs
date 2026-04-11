@@ -58,6 +58,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Informa para a API que será utilizado arquivos estaticos. Ex.: imagens
+app.UseStaticFiles();
+
 app.MapControllers();
 
 app.Run();

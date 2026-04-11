@@ -84,13 +84,13 @@ namespace EcommerseEscalavel.Controllers
             await _context.SaveChangesAsync();
 
             // CreatedAtAction status 201: Utilizado quando uma requisição de inserção de dados foi bem sucedida retornando os dados inseridos
-            return CreatedAtAction("GetByEmail", new { email = novo.Email }, novo); // Para que o "GetById" funcione, é necessário que a mesma esteja criado ↓
+            return CreatedAtAction("GetById", new { id = novo.Id }, novo); // Para que o "GetById" funcione, é necessário que a mesma esteja criado ↓
         }
 
-        [HttpGet("{email}")]            // função utilizada para retornar os dados com o email especificado
-        public async Task<ActionResult> GetByEmail(string email)
+        [HttpGet("{id}")]            // função utilizada para retornar os dados com o email especificado
+        public async Task<ActionResult> GetById(int id)
         {
-            var model = await _context.Usuarios.FirstOrDefaultAsync(c => c.Email == email);
+            var model = await _context.Usuarios.FirstOrDefaultAsync(c => c.Id == id);
 
             if (model == null) return NotFound();
 
@@ -98,8 +98,8 @@ namespace EcommerseEscalavel.Controllers
         }
 
         [Authorize]
-        [HttpPut("{email}")]           // função utilizada para atualizar os dados com o email especificado
-        public async Task<ActionResult> Update(string email, UsuarioDto model)
+        [HttpPut("{id}")]           // função utilizada para atualizar os dados com o email especificado
+        public async Task<ActionResult> Update(int id, UsuarioDto model)
         {
             // Verifica se o usuario está logado ou não e qual o seu perfil
             bool estaLogado = User.Identity.IsAuthenticated;
@@ -109,7 +109,7 @@ namespace EcommerseEscalavel.Controllers
             //Console.WriteLine("criadorIdClaim: " + criadorIdClaim);
 
             // Localiza o usuário com o e-mail informado
-            var modeloDb = await _context.Usuarios.FirstOrDefaultAsync(c => c.Email == email);
+            var modeloDb = await _context.Usuarios.FirstOrDefaultAsync(c => c.Id == id);
 
             // verifica se o usuário do e-mail informado existe
             if (modeloDb == null) return NotFound("Usuario não existe");
@@ -157,8 +157,8 @@ namespace EcommerseEscalavel.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{email}")]
-        public async Task<ActionResult> Delete(string email)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
             // Verifica se o usuario está logado ou não e qual o seu perfil
             bool estaLogado = User.Identity.IsAuthenticated;
@@ -166,7 +166,7 @@ namespace EcommerseEscalavel.Controllers
             string criadorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             // Localiza as informações do e-mail do usuário
-            var model = await _context.Usuarios.FirstOrDefaultAsync(c => c.Email == email);
+            var model = await _context.Usuarios.FirstOrDefaultAsync(c => c.Id == id);
 
             if (model == null) return NotFound("Usuário não encontrado");
 
@@ -191,6 +191,10 @@ namespace EcommerseEscalavel.Controllers
 
             //Desabilita o usuário ao invés de excluir para conformidade com a LGPD
             model.Ativo = false;
+
+            // Campos da LGPD
+            model.DataAlteracao = DateTime.UtcNow;
+            model.UsuarioAlteracao = int.Parse(criadorIdClaim);
 
             _context.Usuarios.Update(model);
             await _context.SaveChangesAsync();
