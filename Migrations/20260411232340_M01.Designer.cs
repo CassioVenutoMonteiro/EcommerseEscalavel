@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerseEscalavel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411172510_M02")]
-    partial class M02
+    [Migration("20260411232340_M01")]
+    partial class M01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

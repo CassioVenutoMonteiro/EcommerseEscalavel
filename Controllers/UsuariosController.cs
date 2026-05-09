@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -111,6 +112,15 @@ namespace EcommerseEscalavel.Controllers
             // Localiza o usuário com o e-mail informado
             var modeloDb = await _context.Usuarios.FirstOrDefaultAsync(c => c.Id == id);
 
+            if (model.Password == "")
+            {
+                model.Password = modeloDb.Password;
+            }
+            else
+            {
+                model.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
+            }
+
             // verifica se o usuário do e-mail informado existe
             if (modeloDb == null) return NotFound("Usuario não existe");
 
@@ -136,7 +146,7 @@ namespace EcommerseEscalavel.Controllers
             {
                 Nome = model.Nome,
                 Email = model.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                Password = model.Password,
                 Perfil = model.Perfil,
                 DataAlteracao = DateTime.UtcNow,
                 UsuarioAlteracao = (criadorIdClaim != null) ? int.Parse(criadorIdClaim) : null,
@@ -189,8 +199,14 @@ namespace EcommerseEscalavel.Controllers
 
             // Caso não seja administrador, o mesmo poderá ser deletado apenas pelo proprio dono da conta
 
-            //Desabilita o usuário ao invés de excluir para conformidade com a LGPD
-            model.Ativo = false;
+            if(model.Ativo)
+            {
+                //Desabilita o usuário ao invés de excluir para conformidade com a LGPD
+                model.Ativo = false;
+            } else
+            {
+                model.Ativo = true;
+            }
 
             // Campos da LGPD
             model.DataAlteracao = DateTime.UtcNow;
@@ -210,6 +226,8 @@ namespace EcommerseEscalavel.Controllers
             var usuarioDb = await _context.Usuarios.FirstOrDefaultAsync(c => c.Email == model.Email);
 
             if (usuarioDb == null || !BCrypt.Net.BCrypt.Verify(model.Password, usuarioDb.Password)) return Unauthorized("Usuario ou senha invalido");
+
+            if(usuarioDb.Ativo == false) return StatusCode(403, "Este usuário está desativado.");
 
             var jwt = GenerateJwtToken(usuarioDb);
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerseEscalavel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411165554_M01")]
-    partial class M01
+    [Migration("20260509164845_M02")]
+    partial class M02
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,9 +106,6 @@ namespace EcommerseEscalavel.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProdutoId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Quantidade")
                         .HasColumnType("decimal(18,2)");
 
@@ -116,7 +113,7 @@ namespace EcommerseEscalavel.Migrations
 
                     b.HasIndex("CompraId");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("IdProduto");
 
                     b.ToTable("ItensComprados");
                 });
@@ -231,7 +228,7 @@ namespace EcommerseEscalavel.Migrations
 
                     b.HasOne("EcommerseEscalavel.Models.Produto", "Produto")
                         .WithMany()
-                        .HasForeignKey("ProdutoId")
+                        .HasForeignKey("IdProduto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

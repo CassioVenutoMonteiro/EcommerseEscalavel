@@ -109,7 +109,6 @@ namespace EcommerseEscalavel.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdProduto = table.Column<int>(type: "int", nullable: false),
-                    ProdutoId = table.Column<int>(type: "int", nullable: false),
                     CompraId = table.Column<int>(type: "int", nullable: false),
                     Quantidade = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -124,8 +123,8 @@ namespace EcommerseEscalavel.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ItensComprados_Produtos_ProdutoId",
-                        column: x => x.ProdutoId,
+                        name: "FK_ItensComprados_Produtos_IdProduto",
+                        column: x => x.IdProduto,
                         principalTable: "Produtos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -142,9 +141,9 @@ namespace EcommerseEscalavel.Migrations
                 column: "CompraId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItensComprados_ProdutoId",
+                name: "IX_ItensComprados_IdProduto",
                 table: "ItensComprados",
-                column: "ProdutoId");
+                column: "IdProduto");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

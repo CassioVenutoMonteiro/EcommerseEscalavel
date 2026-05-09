@@ -15,8 +15,8 @@ namespace EcommerseEscalavel.Controllers
         {
             _context = context;
         }
-        [HttpGet("sales")]
-        public async Task<IActionResult> GetSalesReport()
+        [HttpGet("itemMaisVendido")]
+        public async Task<IActionResult> RelatorioItemMaisVendido()
         {
             var totalCompras = await _context.Compras.CountAsync();
 

@@ -38,6 +38,19 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+// Elimina a segurança para copnsultar via JS no site
+// (Atenção! não pode ser utilizado em um site de verdade devido a falhas de segunrança. Por ser apenas um trabalho utilizei dessa forma)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MinhaPoliticaCors", policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5500") // A URL do seu Live Server
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 // builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +64,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Inicia a utilização do modo não seguro
+app.UseCors("MinhaPoliticaCors");
 
 app.UseHttpsRedirection();
 
