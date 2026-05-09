@@ -114,8 +114,15 @@ namespace EcommerseEscalavel.Controllers
 
             if (model == null) return NotFound("Produto não encontrado");
 
-            //Desabilita o produto ao invés de excluir para conformidade com a LGPD
-            model.Ativo = false;
+            if (model.Ativo)
+            {
+                //Desabilita o produto ao invés de excluir para conformidade com a LGPD
+                model.Ativo = false;
+            }
+            else
+            {
+                model.Ativo = true;
+            }
 
             // Campos da LGPD
             model.DataAlteracao = DateTime.UtcNow;
