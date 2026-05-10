@@ -86,6 +86,19 @@ namespace EcommerseEscalavel.Controllers
             return Ok(model);
         }
 
+        [Authorize]
+        [HttpGet("Usuario/{id}")]            // função utilizada para retornar os dados com o email especificado
+        public async Task<ActionResult> GetByIdUsuario(int id)
+        {
+            string criadorIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var model = await _context.Carrinhos.Include(i => i.Itens).FirstOrDefaultAsync(c => c.IdUsuario == id);
+
+            if (model == null) return NotFound();
+
+            return Ok(model);
+        }
+
         // Explicação completa da função
         // Essa função é feito para atualizar o carrinho.
         // Ela tanto atualiza o preço assim que é chamada quanto altera a quantidade do mesmo item no carrinho
