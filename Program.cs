@@ -44,7 +44,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MinhaPoliticaCors", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5500") // A URL do seu Live Server
+        policy.AllowAnyOrigin() // Libera todas as URLs
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
